@@ -24,8 +24,8 @@ This project will use the following stack. The roadmap and folder structure belo
 | API style | REST API | Let external apps consume the data |
 | Database | PostgreSQL | Store recipes, phones, products, API keys, and metadata |
 | Database hosting | Neon | Hosted serverless PostgreSQL database |
-| ORM | Prisma ORM | Type-safe database queries and migrations |
-| Schema language | Prisma Schema Language (PSL) | Define Prisma models in `schema.prisma` |
+| ORM | Prisma Next (`@prisma/orm-postgres`) | Type-safe database queries and database setup |
+| Schema language | Prisma Schema Language (PSL) | Define data models in `prisma/contract.prisma` |
 | Validation | Zod | Validate route parameters, query strings, and request bodies |
 | Authentication | API keys | Identify and authorize API consumers |
 | Rate limiting | Upstash Redis | Limit excessive requests by key and IP address |
@@ -66,7 +66,7 @@ This project will use the following stack. The roadmap and folder structure belo
 
 **Goal:** establish a maintainable Next.js and TypeScript API service.
 
-1. Keep API handlers under `src/app/api/v1/`.
+1. Keep API handlers under `app/api/v1/`.
 2. Use TypeScript throughout the app.
 3. Configure Next.js for the API and an MDX/Markdown documentation site.
 4. Add environment variables for Neon/PostgreSQL, API-key hashing, Upstash Redis, storage service, and site URL. Never commit real values.
@@ -79,9 +79,9 @@ This project will use the following stack. The roadmap and folder structure belo
 **Goal:** create dependable data that the API can serve quickly.
 
 1. Create a Neon PostgreSQL project and set its connection strings in local, preview, and production environment variables.
-2. Define PostgreSQL models in Prisma Schema Language (PSL), in `prisma/schema.prisma`.
-3. Run Prisma migrations for every schema change; do not alter production tables manually.
-4. Add a Prisma seed script plus repeatable import scripts—not manual production edits.
+2. Define PostgreSQL models in Prisma Schema Language (PSL), in `prisma/contract.prisma`.
+3. After each contract change, run `npm run contract:emit` to regenerate `prisma/contract.json` and `prisma/contract.d.ts`. Use Prisma Next's documented database workflow rather than assuming standard Prisma migration commands.
+4. Add a repeatable seed/import script—not manual production edits.
 5. Store images in object storage/CDN; save only their URLs and attribution in PostgreSQL.
 6. Track data source, license, import date, and last-updated date for every imported record.
 7. Add an editorial/admin process for corrections and removals.
@@ -189,98 +189,161 @@ Recommended error envelope:
 
 ## 4. Recommended Next.js structure
 
-This layout keeps public API routes, database access, validation, and business logic separate. It supports both the API and an optional documentation/landing site in the same Next.js app.
+This is the target structure for development through production. It keeps your existing root `app/` App Router and **Prisma Next** setup: `prisma/contract.prisma` is the data contract, and `prisma/db.ts` is the typed database client. Add the Recipes API first, then Phones and Products after the shared API patterns are stable.
 
 ```text
 my-public-api/
-├── src/
-│   ├── app/
-│   │   ├── api/
-│   │   │   ├── health/
-│   │   │   │   └── route.ts
-│   │   │   ├── v1/
-│   │   │   │   ├── recipes/
-│   │   │   │   │   ├── route.ts                 # GET /api/v1/recipes
-│   │   │   │   │   └── [slug]/
-│   │   │   │   │       └── route.ts             # GET /api/v1/recipes/:slug
-│   │   │   │   ├── categories/
-│   │   │   │   │   └── route.ts
-│   │   │   │   ├── ingredients/
-│   │   │   │   │   └── route.ts
-│   │   │   │   ├── phones/
-│   │   │   │   │   ├── route.ts                 # GET /api/v1/phones
-│   │   │   │   │   └── [slug]/
-│   │   │   │   │       ├── route.ts             # GET /api/v1/phones/:slug
-│   │   │   │   │       └── prices/
-│   │   │   │   │           └── route.ts
-│   │   │   │   └── brands/
-│   │   │   │       └── route.ts
-│   │   │   ├── docs/
-│   │   │   │   ├── page.tsx                     # API documentation index
-│   │   │   │   └── [...slug]/
-│   │   │   │       └── page.tsx                 # Renders an MDX documentation page
-│   │   │   ├── layout.tsx
-│   │   │   └── page.tsx                         # Optional landing page
-│   │   ├── features/
-│   │   │   ├── recipes/
-│   │   │   │   ├── recipe.service.ts            # Recipe business rules
-│   │   │   │   ├── recipe.repository.ts         # Database queries
-│   │   │   │   ├── recipe.schema.ts             # Query/input validation
-│   │   │   │   └── recipe.types.ts
-│   │   │   └── phones/
-│   │   │       ├── phone.service.ts
-│   │   │       ├── phone.repository.ts
-│   │   │       ├── phone.schema.ts
-│   │   │       └── phone.types.ts
-│   │   ├── lib/
-│   │   │   ├── prisma.ts                         # Prisma client for Neon PostgreSQL
-│   │   │   ├── auth.ts                           # API-key verification and hashing
-│   │   │   ├── rate-limit.ts                     # Upstash Redis rate-limit rules
-│   │   │   ├── upstash.ts                        # Upstash Redis client
-│   │   │   ├── api-response.ts                   # Standard response helpers
-│   │   │   ├── errors.ts
-│   │   │   └── env.ts                            # Environment validation
-│   │   └── middleware.ts                         # Cross-cutting request checks, if needed
-│   ├── content/
-│   │   └── docs/                                # MDX/Markdown API documentation
-│   │       ├── introduction.mdx
-│   │       ├── authentication.mdx
-│   │       ├── recipes.mdx
-│   │       └── phones.mdx
-├── prisma/                                      # Prisma Schema Language and migrations
-│   ├── schema.prisma
-│   ├── migrations/
-│   └── seed.ts
-├── scripts/
-│   ├── import-recipes.ts
-│   └── import-phones.ts
-├── public/                                      # Only static public assets; use object storage for large images
+│
+├── app/
+│   │
+│   ├── api/
+│   │   ├── health/
+│   │   │   └── route.ts                        # GET /api/health
+│   │   └── v1/
+│   │       │
+│   │       ├── recipes/
+│   │       │   ├── route.ts
+│   │       │   └── [slug]/
+│   │       │       └── route.ts
+│   │       │
+│   │       ├── phones/
+│   │       │   ├── route.ts
+│   │       │   └── [slug]/
+│   │       │       └── route.ts
+│   │       │
+│   │       ├── products/
+│   │       │   ├── route.ts
+│   │       │   └── [slug]/
+│   │       │       └── route.ts
+│   │       │
+│   │       ├── categories/
+│   │       │   └── route.ts
+│   │       │
+│   │       └── search/
+│   │           └── route.ts
+│   │
+│   ├── docs/
+│   │   ├── page.tsx
+│   │   ├── recipes/
+│   │   │   └── page.tsx
+│   │   ├── phones/
+│   │   │   └── page.tsx
+│   │   ├── products/
+│   │   │   └── page.tsx
+│   │   ├── authentication/
+│   │   │   └── page.tsx
+│   │   ├── rate-limits/
+│   │   │   └── page.tsx
+│   │   └── errors/
+│   │       └── page.tsx
+│   │
+│   ├── page.tsx
+│   ├── layout.tsx
+│   └── globals.css
+│
+│
+├── prisma/                                     # Existing Prisma Next files
+│   ├── contract.prisma                         # Define data models in PSL
+│   ├── contract.json                           # Generated contract; commit it
+│   ├── contract.d.ts                           # Generated TypeScript types; commit it
+│   └── db.ts                                   # Typed Neon/PostgreSQL client
+│
+│
+├── lib/
+│   ├── auth.ts
+│   ├── env.ts
+│   ├── rate-limit.ts
+│   ├── response.ts
+│   └── utils.ts
+│
+│
+├── services/
+│   ├── recipe.service.ts
+│   ├── phone.service.ts
+│   ├── product.service.ts
+│   ├── category.service.ts
+│   └── search.service.ts
+│
+│
+├── validators/
+│   ├── recipe.ts
+│   ├── phone.ts
+│   ├── product.ts
+│   ├── category.ts
+│   └── query.ts                                # Shared pagination and search validation
+│
+│
+├── types/
+│   ├── api.ts
+│   ├── recipe.ts
+│   ├── phone.ts
+│   ├── product.ts
+│   └── category.ts
+│
+│
 ├── tests/
-│   ├── integration/
-│   └── unit/
+│   ├── health.test.ts
+│   ├── auth.test.ts
+│   ├── rate-limit.test.ts
+│   ├── recipes/
+│   │   ├── recipes.test.ts
+│   │   └── recipe-slug.test.ts
+│   │
+│   ├── phones/
+│   │   └── phones.test.ts
+│   │
+│   └── products/
+│       └── products.test.ts
+│
+│
 ├── docs/
-│   ├── openapi.yaml                              # Machine-readable API contract
+│   ├── getting-started.mdx
+│   ├── recipes.mdx
+│   ├── phones.mdx
+│   ├── products.mdx
+│   ├── authentication.mdx
+│   ├── rate-limits.mdx
+│   ├── errors.mdx
+│   ├── openapi.yaml
 │   └── data-sources.md
+│
+│
+├── .env
+├── .env.example
+├── .gitignore
 ├── .github/
 │   └── workflows/
-│       └── test.yml                              # Vitest checks on GitHub
-├── .env.example                                 # DATABASE_URL, DIRECT_URL, UPSTASH_*; no secrets
-├── vitest.config.ts
-├── next.config.ts                                # Includes MDX support if configured
+│       └── test.yml                            # Runs Vitest on pull requests
+├── scripts/
+│   ├── import-recipes.ts
+│   ├── import-phones.ts
+│   └── import-products.ts
 ├── API_ROADMAP.md
+├── eslint.config.mjs
 ├── package.json
+├── prisma.config.ts
+├── prisma-next.md
+├── next.config.ts
+├── next-env.d.ts
+├── postcss.config.mjs
+├── tsconfig.json
+├── vitest.config.ts
 └── README.md
 ```
 
 ### What belongs where
 
-- `src/app/api/.../route.ts`: HTTP concerns only—read request data, call a service, and return the standard response.
-- `src/features/...`: resource-specific Zod validation, Prisma database queries, and rules. This prevents route files from becoming large and hard to test.
-- `src/lib/`: shared infrastructure, including the Prisma/Neon connection, API-key logic, and Upstash Redis client.
-- `src/content/docs/`: MDX/Markdown source files rendered by the documentation website.
-- `prisma/`: Prisma schema, migrations, and safe seed data for Neon PostgreSQL.
+- `app/api/.../route.ts`: HTTP concerns only—read request data, validate it, query through `prisma/db.ts`, and return the standard response.
+- `prisma/contract.prisma`: the Prisma Next data contract. Edit models here, then run `npm run contract:emit` to update the generated contract files.
+- `prisma/db.ts`: the existing typed PostgreSQL client. Import it with `@/prisma/db` from route handlers and server-side helpers.
+- `services/`: API business logic and database calls for each resource. Route handlers should stay thin by delegating work here.
+- `validators/`: Zod schemas for route parameters, query strings, and request bodies.
+- `types/`: shared TypeScript response and resource types.
+- `lib/`: shared server-only infrastructure for API keys, Upstash, environment variables, response helpers, and common utilities.
+- `app/docs/`: Next.js pages that render the documentation website.
+- `docs/`: MDX content, OpenAPI contract, and data-source/legal notes for the documentation website.
+- `tests/`: Vitest coverage for health checks, authentication, rate limiting, and every public resource.
 - `scripts/`: repeatable data imports and maintenance jobs.
-- `docs/`: OpenAPI contract and data-source/legal notes.
 - `.github/workflows/`: automated Vitest checks run by GitHub Actions.
 
 ---
@@ -291,7 +354,7 @@ Use this order to avoid building features on an unstable base:
 
 - [ ] Decide the first API product: Recipes.
 - [ ] Define the Recipe data fields and legal data sources.
-- [ ] Create a Neon PostgreSQL database and configure Prisma/PSL, migrations, and a small seed dataset.
+- [ ] Create a Neon PostgreSQL database, configure Prisma Next/PSL, initialize the database schema, and add a small seed dataset.
 - [ ] Build `GET /api/health`.
 - [ ] Build and test `GET /api/v1/recipes` with Zod validation and pagination.
 - [ ] Build and test `GET /api/v1/recipes/:slug` with Vitest.
@@ -314,10 +377,10 @@ This is a realistic first-release plan if you can work around 10–15 focused ho
 **Outcome:** a Next.js project is connected to Neon and can serve a small, legal recipe dataset.
 
 1. Create the GitHub repository, connect it to Vercel, and enable a preview deployment. It can still be a simple landing page at this point.
-2. Create a Neon PostgreSQL project. Keep the pooled connection string in `DATABASE_URL` and the direct connection string in `DIRECT_URL` for Prisma migrations.
+2. Create a Neon PostgreSQL project and add its connection string as `DATABASE_URL` in your local environment. Do not put the real value in `.env.example`.
 3. Install and configure Prisma, Zod, Vitest, and the packages needed for MDX documentation. Add a safe `.env.example` with variable names only.
-4. Design the first PSL models in `prisma/schema.prisma`: `Recipe`, `Ingredient`, `RecipeIngredient`, `Category`, `Cuisine`, `Diet`, and `ApiKey`.
-5. Run the first Prisma migration and add a seed script with 20–50 recipe records. Use only data and images you may legally redistribute.
+4. Design the first PSL models in `prisma/contract.prisma`: `Recipe`, `Ingredient`, `RecipeIngredient`, `Category`, `Cuisine`, `Diet`, and `ApiKey`.
+5. Run `npm run contract:emit`, initialize the database using the Prisma Next workflow, and add a seed/import script with 20–50 recipe records. Use only data and images you may legally redistribute.
 6. Create `GET /api/health` and make it verify that the application and database are reachable.
 7. Decide the v1 response and error formats, pagination rules, supported filters, rate-limit policy, and API-key header. Record them in the MDX docs.
 
@@ -358,8 +421,8 @@ This is a realistic first-release plan if you can work around 10–15 focused ho
 1. Finish the Next.js MDX documentation site: introduction, authentication, rate limits, errors, recipes, changelog, data sources, and contact/reporting instructions.
 2. Write or update `docs/openapi.yaml` so it matches the live v1 endpoints and examples.
 3. Check every data source, image, licence, attribution requirement, and phone-price disclaimer before making the API public.
-4. Set Vercel environment variables for **Preview** and **Production**. At minimum: `DATABASE_URL`, `DIRECT_URL`, `API_KEY_PEPPER`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, and the public application URL. Do not expose server-only secrets with a `NEXT_PUBLIC_` prefix.
-5. Run Prisma migrations against the production Neon database using the approved deployment process, then seed only the intended production sample data.
+4. Set Vercel environment variables for **Preview** and **Production**. At minimum: `DATABASE_URL`, `API_KEY_PEPPER`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, and the public application URL. Do not expose server-only secrets with a `NEXT_PUBLIC_` prefix.
+5. Apply the Prisma Next database initialization/update workflow to the production Neon database, then import only the intended production sample data.
 6. Test the production URL from a clean client: health check, valid key, invalid key, pagination, empty results, rate limiting, documentation links, and CORS behavior.
 7. Enable Vercel deployment/error monitoring and check Neon and Upstash usage dashboards. Add an uptime monitor for `GET /api/health` if available.
 8. Tag the release in GitHub, publish a short v1 changelog, and share the documentation URL with early users.
@@ -370,7 +433,7 @@ This is a realistic first-release plan if you can work around 10–15 focused ho
 
 - [ ] GitHub `main` branch is passing the Vitest workflow.
 - [ ] Vercel production project is connected to the intended GitHub repository/branch.
-- [ ] Neon production database contains the current migrated schema and approved data.
+- [ ] Neon production database contains the current initialized Prisma Next schema and approved data.
 - [ ] Upstash production credentials are set in Vercel.
 - [ ] API keys are hashed, and raw keys are never logged or committed.
 - [ ] `GET /api/health` responds successfully on the production URL.
