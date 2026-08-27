@@ -1,21 +1,158 @@
 // use prisma-next
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+model DataSource {
+  id              Int                  @id @default(autoincrement())
+  name            String
+  websiteUrl      String?
+  license         String?
+  attributionText String?
+  createdAt       TimestamptzString    @default(now())
+  updatedAt       temporal.updatedAtString()
+
+  recipes    Recipe[]
+  importRuns ImportRun[]
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+model ImportRun {
+  id             Int               @id @default(autoincrement())
+  dataSourceId   Int
+  resourceType   String
+  status         String
+  recordsCreated Int               @default(0)
+  recordsUpdated Int               @default(0)
+  errorMessage   String?
+  startedAt      TimestamptzString @default(now())
+  finishedAt     TimestamptzString?
+
+  dataSource DataSource @relation(fields: [dataSourceId], references: [id])
+
+  @@index([dataSourceId])
+  @@index([status])
+}
+
+model Category {
+  id        Int               @id @default(autoincrement())
+  slug      String            @unique
+  name      String
   createdAt TimestamptzString @default(now())
   updatedAt temporal.updatedAtString()
+
+  recipes RecipeCategory[]
+}
+
+model Cuisine {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+  name String
+
+  recipes Recipe[]
+}
+
+model Diet {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+  name String
+
+  recipes RecipeDiet[]
+}
+
+model Ingredient {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+  name String
+
+  recipes RecipeIngredient[]
+}
+
+model Recipe {
+  id           Int               @id @default(autoincrement())
+  slug         String            @unique
+  title        String
+  description  String?
+  imageUrl     String?
+  prepMinutes  Int?
+  cookMinutes  Int?
+  servings     Int?
+  cuisineId    Int?
+  dataSourceId Int?
+  isPublished  Boolean           @default(true)
+  createdAt    TimestamptzString @default(now())
+  updatedAt    temporal.updatedAtString()
+
+  cuisine     Cuisine?     @relation(fields: [cuisineId], references: [id])
+  dataSource  DataSource?  @relation(fields: [dataSourceId], references: [id])
+  steps       RecipeStep[]
+  ingredients RecipeIngredient[]
+  categories  RecipeCategory[]
+  diets       RecipeDiet[]
+  nutrition   RecipeNutrition?
+
+  @@index([title])
+  @@index([cuisineId])
+  @@index([dataSourceId])
+  @@index([isPublished])
+  @@index([cookMinutes])
+}
+
+model RecipeStep {
+  id          Int    @id @default(autoincrement())
+  recipeId    Int
+  stepNumber  Int
+  instruction String
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+
+  @@unique([recipeId, stepNumber])
+}
+
+model RecipeIngredient {
+  id           Int    @id @default(autoincrement())
+  recipeId     Int
+  ingredientId Int
+  amount       Float?
+  unit         String?
+  note         String?
+  sortOrder    Int
+
+  recipe     Recipe     @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  ingredient Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@unique([recipeId, ingredientId, sortOrder])
+  @@index([recipeId])
+  @@index([ingredientId])
+}
+
+model RecipeCategory {
+  recipeId   Int
+  categoryId Int
+
+  recipe   Recipe   @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId, categoryId])
+  @@index([categoryId])
+}
+
+model RecipeDiet {
+  recipeId Int
+  dietId   Int
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
+  diet   Diet   @relation(fields: [dietId], references: [id], onDelete: Cascade)
+
+  @@id([recipeId, dietId])
+  @@index([dietId])
+}
+
+model RecipeNutrition {
+  id        Int                  @id @default(autoincrement())
+  recipeId  Int                  @unique
+  calories  Float?
+  proteinG  Float?
+  carbsG    Float?
+  fatG      Float?
+  fiberG    Float?
+  updatedAt temporal.updatedAtString()
+
+  recipe Recipe @relation(fields: [recipeId], references: [id], onDelete: Cascade)
 }
