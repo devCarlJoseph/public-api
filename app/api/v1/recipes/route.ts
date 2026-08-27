@@ -1,42 +1,80 @@
 import { db } from "@/prisma/db";
+import { recipeListQuerySchema } from "@/validators/recipe";
 
-
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const recipes = await db.orm.public.Recipe
-    .where({ isPublished: true })
-    .select(
-      "id",
-      "slug",
-      "title",
-      "description",
-      "imageUrl",
-      "prepMinutes",
-      "cookMinutes",
-      "servings"
-    )
-    .orderBy((recipe) => recipe.createdAt.desc())
-    .limit(20)
-    .all();
+    const url = new URL(request.url);
+
+    const parsed = recipeListQuerySchema.safeParse(
+      Object.fromEntries(url.searchParams.entries()),
+    );
+
+    if (!parsed.success) {
+      return Response.json(
+        {
+          error: {
+            code: "VALIDATION_ERROR",
+            message: "Invalid recipe query parameters",
+            details: parsed.error.issues,
+          },
+        },
+        { status: 400 },
+      );
+    }
+
+    const { page, limit, search } = parsed.data;
+    const offset = (page - 1) * limit;
+
+    function recipeQuery() {
+      let query = db.orm.public.Recipe.where({
+        isPublished: true,
+      });
+
+      if (search) {
+        query = query.where((recipe) => recipe.title.ilike(`%${search}%`));
+      }
+
+      return query;
+    }
+
+    const rows = await recipeQuery()
+      .select(
+        "id",
+        "slug",
+        "title",
+        "description",
+        "imageUrl",
+        "prepMinutes",
+        "cookMinutes",
+        "servings",
+      )
+      .orderBy((recipe) => recipe.createdAt.desc())
+      .limit(limit + 1)
+      .offset(offset)
+      .all();
+
+    const hasNextPage = rows.length > limit;
+    const recipes = rows.slice(0, limit);
 
     return Response.json({
       data: recipes,
       meta: {
-        count: recipes.length,
-        limit: 20,
-      }
+        page,
+        limit,
+        nextPage: hasNextPage ? page + 1 : null,
+      },
     });
   } catch (error) {
     console.error("Failed to load recipes:", error);
 
     return Response.json(
       {
-      error: {
+        error: {
           code: "RECIPES_FETCH_FAILED",
           message: "Unable to load recipes",
         },
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
