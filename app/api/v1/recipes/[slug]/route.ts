@@ -1,4 +1,5 @@
 import { db } from "@/prisma/db";
+import { recipeSlugSchema } from "@/validators/recipe";
 
 type RouteContext = {
   params: Promise<{ slug: string }>;
@@ -7,8 +8,23 @@ type RouteContext = {
 export async function GET(_request: Request, { params }: RouteContext) {
   const { slug } = await params;
 
+  const parsed = recipeSlugSchema.safeParse({ slug });
+
+  if (!parsed.success) {
+    return Response.json(
+      {
+        error: {
+          code: "INVALID_SLUG",
+          message: "The recipe slug is invalid",
+          details: parsed.error.issues,
+        },
+      },
+      { status: 400 },
+    );
+  }
+
   const recipe = await db.orm.public.Recipe.where({
-    slug,
+    slug: parsed.data.slug,
     isPublished: true,
   }).first();
 
