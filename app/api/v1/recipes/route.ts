@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const { page, limit, search } = parsed.data;
+    const { page, limit, search, category } = parsed.data;
     const offset = (page - 1) * limit;
 
     function recipeQuery() {
@@ -32,6 +32,16 @@ export async function GET(request: Request) {
 
       if (search) {
         query = query.where((recipe) => recipe.title.ilike(`%${search}%`));
+      }
+
+      if (category) {
+        query = query.where((recipe) =>
+          recipe.categories.some((item) =>
+            item.category.some((categoryRecord) =>
+              categoryRecord.slug.eq(category),
+            ),
+          ),
+        );
       }
 
       return query;
