@@ -1,8 +1,39 @@
 import { db } from "@/prisma/db";
 import { recipeListQuerySchema } from "@/validators/recipe";
+import { getClientIp, publicApiRateLimit } from "@/lib/rate-limits";
 
 export async function GET(request: Request) {
   try {
+    const clientIp = getClientIp(request);
+
+    const rateLimit = await publicApiRateLimit.limit(`ip:${clientIp}`);
+
+    const rateLimitHeaders = {
+      "X-RateLimit-Limit": String(rateLimit.limit),
+      "X-RateLimit-Remaining": String(rateLimit.remaining),
+      "X-RateLimit-Reset": String(Math.ceil(rateLimit.reset / 1000)),
+    };
+
+    if (!rateLimit.success) {
+      return Response.json(
+        {
+          error: {
+            code: "RATE_LIMIT_EXCEEDED",  
+            message: "Too many requests. Please try again later.",
+          },
+        },
+        {
+          status: 429,
+          headers: {
+            ...rateLimitHeaders,
+            "Retry-After": String(
+              Math.max(1, Math.ceil((rateLimit.reset - Date.now()) / 1000)),
+            ),
+          },
+        },
+      );
+    }
+
     const url = new URL(request.url);
 
     const parsed = recipeListQuerySchema.safeParse(
@@ -66,14 +97,19 @@ export async function GET(request: Request) {
     const hasNextPage = rows.length > limit;
     const recipes = rows.slice(0, limit);
 
-    return Response.json({
-      data: recipes,
-      meta: {
-        page,
-        limit,
-        nextPage: hasNextPage ? page + 1 : null,
+    return Response.json(
+      {
+        data: recipes,
+        meta: {
+          page,
+          limit,
+          nextPage: hasNextPage ? page + 1 : null,
+        },
       },
-    });
+      {
+        headers: rateLimitHeaders,
+      },
+    );
   } catch (error) {
     console.error("Failed to load recipes:", error);
 
