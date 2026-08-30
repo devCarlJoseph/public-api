@@ -1,4 +1,3 @@
-import { number } from "zod";
 import { db } from "../prisma/db";
 
 const IMAGE_BASE_URL = "https://your-domain.vercel.app/images/recipes";
@@ -22,7 +21,7 @@ type SeedRecipe = {
   categoryName: string;
   steps: string[];
   ingredients: SeedIngredient[];
-  nutrition: {
+  nutrition: {  
     calories: number;
     proteinG: number;
     carbsG: number;
