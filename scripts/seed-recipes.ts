@@ -1,6 +1,6 @@
 import { db } from "../prisma/db";
 
-const IMAGE_BASE_URL = "https://your-domain.vercel.app/images/recipes";
+const IMAGE_BASE_URL = "https://catalogra.vercel.app/images/recipes";
 
 type SeedIngredient = {
   slug: string;
@@ -21,7 +21,7 @@ type SeedRecipe = {
   categoryName: string;
   steps: string[];
   ingredients: SeedIngredient[];
-  nutrition: {  
+  nutrition: {
     calories: number;
     proteinG: number;
     carbsG: number;
@@ -1458,4 +1458,4 @@ async function main() {
 main().catch((error) => {
   console.error("Seed failed:", error);
   process.exitCode = 1;
-})
+});
