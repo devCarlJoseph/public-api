@@ -466,6 +466,221 @@ const additionalRealmePhones: RealmePhoneSeed[] = [
   },
 ];
 
+type OppoPhoneSeed = {
+  slug: string;
+  name: string;
+  model?: string;
+  description: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  batteryMah: number;
+  chipset: string;
+  cameraSummary: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+};
+
+function makeOppoPhone(item: OppoPhoneSeed): SeedProduct {
+  return {
+    brand: {
+      slug: "oppo",
+      name: "OPPO",
+      websiteUrl: "https://www.oppo.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    model: item.model,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+      hasNfc: true,
+    },
+    variants: [
+      {
+        sku: `${item.slug}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
+        ramGb: item.ramGb,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "oppo-ph",
+          retailerName: "OPPO Philippines",
+          retailerWebsiteUrl: "https://www.oppo.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "historical_launch_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
+}
+
+const additionalOppoPhones: OppoPhoneSeed[] = [
+  {
+    slug: "oppo-reno14-pro-5g",
+    name: "OPPO Reno14 Pro 5G",
+    description: "A high-end 5G phone with a 120Hz OLED display, three 50MP rear cameras, and fast charging for demanding photography and entertainment.",
+    displaySizeInches: 6.83,
+    displayResolution: "1272 x 2800",
+    batteryMah: 6200,
+    chipset: "MediaTek Dimensity 8450",
+    cameraSummary: "50MP main + 50MP telephoto + 50MP ultrawide; 50MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 512,
+    amount: 47999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-reno/reno14-pro/",
+  },
+  {
+    slug: "oppo-reno14-5g",
+    name: "OPPO Reno14 5G",
+    model: "CPH2737",
+    description: "A premium 5G phone with a 120Hz OLED display, a 6,000mAh battery, 80W charging, and a versatile 50MP camera system with telephoto zoom.",
+    displaySizeInches: 6.59,
+    displayResolution: "1256 x 2760",
+    batteryMah: 6000,
+    chipset: "MediaTek Dimensity 8350",
+    cameraSummary: "50MP main + 50MP 3.5x telephoto + 8MP ultrawide; 50MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 31999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-reno/reno14/",
+  },
+  {
+    slug: "oppo-reno14-f-5g",
+    name: "OPPO Reno14 F 5G",
+    description: "A style-focused 5G phone with a 120Hz AMOLED display, IP-rated protection, AI photo tools, and all-day battery life.",
+    displaySizeInches: 6.57,
+    displayResolution: "1080 x 2372",
+    batteryMah: 6000,
+    chipset: "Snapdragon 6 Gen 1",
+    cameraSummary: "50MP main + 8MP ultrawide + 2MP macro; 32MP selfie",
+    has5g: true,
+    ramGb: 8,
+    storageGb: 256,
+    amount: 21999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-reno/reno14-f-5g/",
+  },
+  {
+    slug: "oppo-reno13-pro-5g",
+    name: "OPPO Reno13 Pro 5G",
+    description: "A premium 5G imaging phone with a curved OLED display, telephoto camera, IP69 protection, and 80W fast charging.",
+    displaySizeInches: 6.83,
+    displayResolution: "1272 x 2800",
+    batteryMah: 5800,
+    chipset: "MediaTek Dimensity 8350",
+    cameraSummary: "50MP main + 50MP telephoto + 8MP ultrawide; 50MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 512,
+    amount: 43999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-reno/reno13-pro/",
+  },
+  {
+    slug: "oppo-reno13-5g",
+    name: "OPPO Reno13 5G",
+    model: "CPH2689",
+    description: "A water-resistant 5G phone with a 120Hz OLED display, a 50MP camera, and 80W charging for daily creation and entertainment.",
+    displaySizeInches: 6.59,
+    displayResolution: "1256 x 2760",
+    batteryMah: 5600,
+    chipset: "MediaTek Dimensity 8350",
+    cameraSummary: "50MP main + 8MP ultrawide + 2MP monochrome; 50MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 512,
+    amount: 34999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-reno/reno13/",
+  },
+  {
+    slug: "oppo-reno13-f-5g",
+    name: "OPPO Reno13 F 5G",
+    description: "A mid-range 5G phone with IP69 protection, a 120Hz AMOLED screen, and a stabilized 50MP main camera.",
+    displaySizeInches: 6.67,
+    displayResolution: "1080 x 2400",
+    batteryMah: 5800,
+    chipset: "Snapdragon 6 Gen 1",
+    cameraSummary: "50MP OIS main + 8MP ultrawide + 2MP macro; 32MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 22999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-reno/reno13-f-5g/",
+  },
+  {
+    slug: "oppo-a5-pro-5g",
+    name: "OPPO A5 Pro 5G",
+    description: "A durable 5G phone with IP69 water and dust protection, a 5,800mAh battery, and military-grade shock resistance.",
+    displaySizeInches: 6.67,
+    displayResolution: "720 x 1604",
+    batteryMah: 5800,
+    chipset: "MediaTek Dimensity 6300",
+    cameraSummary: "50MP main + 2MP monochrome; 8MP selfie",
+    has5g: true,
+    ramGb: 8,
+    storageGb: 256,
+    amount: 15999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-a/a5-pro-5g/",
+  },
+  {
+    slug: "oppo-a5-pro",
+    name: "OPPO A5 Pro",
+    description: "A durable 4G phone with IP-rated protection, a large battery, and fast charging for dependable everyday use.",
+    displaySizeInches: 6.67,
+    displayResolution: "720 x 1604",
+    batteryMah: 5800,
+    chipset: "MediaTek Helio G100",
+    cameraSummary: "50MP main + 2MP monochrome; 8MP selfie",
+    has5g: false,
+    ramGb: 8,
+    storageGb: 256,
+    amount: 13999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-a/a5-pro/",
+  },
+  {
+    slug: "oppo-a5-5g",
+    name: "OPPO A5 5G",
+    description: "An affordable 5G phone with a 120Hz display, a 6,000mAh battery, 45W charging, and reinforced durability.",
+    displaySizeInches: 6.67,
+    displayResolution: "720 x 1604",
+    batteryMah: 6000,
+    chipset: "MediaTek Dimensity 6300",
+    cameraSummary: "50MP main + 2MP monochrome; 8MP selfie",
+    has5g: true,
+    ramGb: 6,
+    storageGb: 128,
+    amount: 9999,
+    sourceUrl: "https://www.oppo.com/ph/product/oppo-a5-5g.P.P1100465",
+  },
+  {
+    slug: "oppo-a3",
+    name: "OPPO A3",
+    model: "CPH2669",
+    description: "A durable entry-level 4G phone with a 90Hz display, 45W charging, and military-grade shock resistance.",
+    displaySizeInches: 6.67,
+    displayResolution: "720 x 1604",
+    batteryMah: 5100,
+    chipset: "Snapdragon 6s 4G Gen 1",
+    cameraSummary: "50MP main camera; 5MP selfie",
+    has5g: false,
+    ramGb: 6,
+    storageGb: 128,
+    amount: 8999,
+    sourceUrl: "https://www.oppo.com/ph/smartphones/series-a/a3/",
+  },
+];
+
 // Add only phone data, images, and prices that you have permission to publish.
 const products: SeedProduct[] = [
   {
@@ -514,6 +729,7 @@ const products: SeedProduct[] = [
   },
   ...additionalSamsungPhones.map(makeSamsungPhone),
   ...additionalRealmePhones.map(makeRealmePhone),
+  ...additionalOppoPhones.map(makeOppoPhone),
 ];
 
 const dataSourceFields = {
