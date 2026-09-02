@@ -42,115 +42,66 @@ type SeedProduct = {
   }[];
 };
 
-type PhoneBrand = SeedProduct["brand"] & {
-  defaultAvailability?: string;
-};
-
-type PhoneSeed = Omit<SeedProduct, "brand" | "spec" | "variants"> & {
-  operatingSystem?: string;
-  chipset?: string;
-  displaySizeInches?: number;
-  displayResolution?: string;
-  batteryMah?: number;
-  cameraSummary?: string;
-  has5g?: boolean;
-  hasNfc?: boolean;
-  supportsEsim?: boolean;
-  ramGb?: number;
+type SamsungPhoneSeed = {
+  slug: string;
+  name: string;
+  model: string;
+  description: string;
+  releaseDate: string;
+  displaySizeInches: number;
+  batteryMah: number;
+  chipset: string;
+  cameraSummary: string;
+  ramGb: number;
   storageGb: number;
   amount: number;
-  availability?: string;
-  retailerSlug?: string;
-  retailerName?: string;
-  retailerWebsiteUrl?: string;
+  checkedAt: string;
   sourceUrl: string;
-  checkedAt?: string;
 };
 
-const DEFAULT_CHECKED_AT = "2026-09-03T00:00:00.000Z";
-
-function makePhone(item: PhoneSeed, brand: PhoneBrand): SeedProduct {
-  const retailerSlug = item.retailerSlug ?? `${brand.slug}-ph`;
-  const retailerName = item.retailerName ?? `${brand.name} Philippines`;
-  const retailerWebsiteUrl = item.retailerWebsiteUrl ?? brand.websiteUrl;
-
+function makeSamsungPhone(item: SamsungPhoneSeed): SeedProduct {
   return {
-    brand,
+    brand: {
+      slug: "samsung",
+      name: "Samsung",
+      websiteUrl: "https://www.samsung.com/ph/",
+    },
     slug: item.slug,
     name: item.name,
     model: item.model,
     description: item.description,
     releaseDate: item.releaseDate,
     spec: {
-      operatingSystem: item.operatingSystem ?? "Android",
+      operatingSystem: "Android",
       chipset: item.chipset,
       displaySizeInches: item.displaySizeInches,
-      displayResolution: item.displayResolution,
       batteryMah: item.batteryMah,
       cameraSummary: item.cameraSummary,
-      has5g: item.has5g,
-      hasNfc: item.hasNfc ?? true,
-      supportsEsim: item.supportsEsim,
+      has5g: true,
+      hasNfc: true,
     },
     variants: [
       {
-        sku: `${item.slug}-${item.ramGb ? `${item.ramGb}GB-` : ""}${item.storageGb}GB`,
-        name: item.ramGb
-          ? `${item.ramGb}GB / ${item.storageGb}GB`
-          : `${item.storageGb}GB`,
+        sku: `${item.model}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
         ramGb: item.ramGb,
         storageGb: item.storageGb,
         price: {
-          retailerSlug,
-          retailerName,
-          retailerWebsiteUrl,
+          retailerSlug: "samsung-ph",
+          retailerName: "Samsung Philippines",
+          retailerWebsiteUrl: "https://www.samsung.com/ph/",
           amount: item.amount,
           currency: "PHP",
-          availability:
-            item.availability ??
-            brand.defaultAvailability ??
-            "historical_launch_price",
+          availability: "historical_launch_price",
           productUrl: item.sourceUrl,
-          checkedAt: item.checkedAt ?? DEFAULT_CHECKED_AT,
+          checkedAt: item.checkedAt,
         },
       },
     ],
   };
 }
 
-const SAMSUNG: PhoneBrand = {
-  slug: "samsung",
-  name: "Samsung",
-  websiteUrl: "https://www.samsung.com/ph/",
-};
-const REALME: PhoneBrand = {
-  slug: "realme",
-  name: "realme",
-  websiteUrl: "https://www.realme.com/ph/",
-  defaultAvailability: "listed_price",
-};
-const OPPO: PhoneBrand = {
-  slug: "oppo",
-  name: "OPPO",
-  websiteUrl: "https://www.oppo.com/ph/",
-};
-const APPLE: PhoneBrand = {
-  slug: "apple",
-  name: "Apple",
-  websiteUrl: "https://www.apple.com/ph/",
-};
-const POCO: PhoneBrand = {
-  slug: "poco",
-  name: "POCO",
-  websiteUrl: "https://www.mi.com/ph/",
-};
-const REDMI: PhoneBrand = {
-  slug: "redmi",
-  name: "Redmi",
-  websiteUrl: "https://www.mi.com/ph/",
-};
-
-const additionalSamsungPhones: PhoneSeed[] = [
+const additionalSamsungPhones: SamsungPhoneSeed[] = [
   {
     slug: "samsung-galaxy-a56-5g",
     name: "Samsung Galaxy A56 5G",
@@ -312,7 +263,63 @@ const additionalSamsungPhones: PhoneSeed[] = [
   },
 ];
 
-const additionalRealmePhones: PhoneSeed[] = [
+type RealmePhoneSeed = {
+  slug: string;
+  name: string;
+  model: string;
+  description: string;
+  displaySizeInches?: number;
+  batteryMah?: number;
+  chipset?: string;
+  cameraSummary?: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+};
+
+function makeRealmePhone(item: RealmePhoneSeed): SeedProduct {
+  return {
+    brand: {
+      slug: "realme",
+      name: "realme",
+      websiteUrl: "https://www.realme.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    model: item.model,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+    },
+    variants: [
+      {
+        sku: `${item.model}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
+        ramGb: item.ramGb,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "realme-ph",
+          retailerName: "realme Philippines",
+          retailerWebsiteUrl: "https://www.realme.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "listed_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
+}
+
+const additionalRealmePhones: RealmePhoneSeed[] = [
   {
     slug: "realme-gt-7",
     name: "realme GT 7",
@@ -475,7 +482,66 @@ const additionalRealmePhones: PhoneSeed[] = [
   },
 ];
 
-const additionalOppoPhones: PhoneSeed[] = [
+type OppoPhoneSeed = {
+  slug: string;
+  name: string;
+  model?: string;
+  description: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  batteryMah: number;
+  chipset: string;
+  cameraSummary: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+};
+
+function makeOppoPhone(item: OppoPhoneSeed): SeedProduct {
+  return {
+    brand: {
+      slug: "oppo",
+      name: "OPPO",
+      websiteUrl: "https://www.oppo.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    model: item.model,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+      hasNfc: true,
+    },
+    variants: [
+      {
+        sku: `${item.slug}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
+        ramGb: item.ramGb,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "oppo-ph",
+          retailerName: "OPPO Philippines",
+          retailerWebsiteUrl: "https://www.oppo.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "historical_launch_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
+}
+
+const additionalOppoPhones: OppoPhoneSeed[] = [
   {
     slug: "oppo-reno14-pro-5g",
     name: "OPPO Reno14 Pro 5G",
@@ -685,8 +751,56 @@ const additionalIphonePhones: SeedProduct[] = [
   },
 ];
 
-function makeApplePhone(item: PhoneSeed): SeedProduct {
-  return makePhone(item, APPLE);
+function makeApplePhone(item: {
+  slug: string;
+  name: string;
+  description: string;
+  operatingSystem: string;
+  chipset: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  cameraSummary: string;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+}): SeedProduct {
+  return {
+    brand: {
+      slug: "apple",
+      name: "Apple",
+      websiteUrl: "https://www.apple.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    spec: {
+      operatingSystem: item.operatingSystem,
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      cameraSummary: item.cameraSummary,
+      has5g: true,
+      hasNfc: true,
+      supportsEsim: true,
+    },
+    variants: [
+      {
+        sku: `${item.slug}-${item.storageGb}GB`,
+        name: `${item.storageGb}GB`,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "apple-ph",
+          retailerName: "Apple Philippines",
+          retailerWebsiteUrl: "https://www.apple.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "historical_launch_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
 }
 
 const additionalApplePhones: SeedProduct[] = [
@@ -820,8 +934,55 @@ const additionalApplePhones: SeedProduct[] = [
   }),
 ];
 
-function makePocoPhone(item: PhoneSeed): SeedProduct {
-  return makePhone(item, POCO);
+function makePocoPhone(item: {
+  slug: string;
+  name: string;
+  description: string;
+  chipset: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  batteryMah: number;
+  cameraSummary: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+}): SeedProduct {
+  return {
+    brand: { slug: "poco", name: "POCO", websiteUrl: "https://www.mi.com/ph/" },
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+      hasNfc: true,
+    },
+    variants: [
+      {
+        sku: `${item.slug}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
+        ramGb: item.ramGb,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "poco-ph",
+          retailerName: "POCO Philippines",
+          retailerWebsiteUrl: "https://www.mi.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "historical_launch_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
 }
 
 const additionalPocoPhones: SeedProduct[] = [
@@ -987,8 +1148,59 @@ const additionalPocoPhones: SeedProduct[] = [
   }),
 ];
 
-function makeRedmiPhone(item: PhoneSeed): SeedProduct {
-  return makePhone(item, REDMI);
+function makeRedmiPhone(item: {
+  slug: string;
+  name: string;
+  description: string;
+  chipset: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  batteryMah: number;
+  cameraSummary: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+}): SeedProduct {
+  return {
+    brand: {
+      slug: "redmi",
+      name: "Redmi",
+      websiteUrl: "https://www.mi.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+      hasNfc: true,
+    },
+    variants: [
+      {
+        sku: `${item.slug}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
+        ramGb: item.ramGb,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "xiaomi-ph",
+          retailerName: "Xiaomi Philippines",
+          retailerWebsiteUrl: "https://www.mi.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "historical_launch_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
 }
 
 const additionalRedmiPhones: SeedProduct[] = [
@@ -1200,9 +1412,9 @@ const products: SeedProduct[] = [
       },
     ],
   },
-  ...additionalSamsungPhones.map((item) => makePhone(item, SAMSUNG)),
-  ...additionalRealmePhones.map((item) => makePhone(item, REALME)),
-  ...additionalOppoPhones.map((item) => makePhone(item, OPPO)),
+  ...additionalSamsungPhones.map(makeSamsungPhone),
+  ...additionalRealmePhones.map(makeRealmePhone),
+  ...additionalOppoPhones.map(makeOppoPhone),
   ...additionalIphonePhones,
   ...additionalApplePhones,
   ...additionalPocoPhones,
