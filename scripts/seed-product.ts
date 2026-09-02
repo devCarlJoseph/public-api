@@ -257,6 +257,215 @@ const additionalSamsungPhones: SamsungPhoneSeed[] = [
   },
 ];
 
+type RealmePhoneSeed = {
+  slug: string;
+  name: string;
+  model: string;
+  description: string;
+  displaySizeInches?: number;
+  batteryMah?: number;
+  chipset?: string;
+  cameraSummary?: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+};
+
+function makeRealmePhone(item: RealmePhoneSeed): SeedProduct {
+  return {
+    brand: {
+      slug: "realme",
+      name: "realme",
+      websiteUrl: "https://www.realme.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    model: item.model,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+    },
+    variants: [
+      {
+        sku: `${item.model}-${item.ramGb}GB-${item.storageGb}GB`,
+        name: `${item.ramGb}GB / ${item.storageGb}GB`,
+        ramGb: item.ramGb,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "realme-ph",
+          retailerName: "realme Philippines",
+          retailerWebsiteUrl: "https://www.realme.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "listed_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
+}
+
+const additionalRealmePhones: RealmePhoneSeed[] = [
+  {
+    slug: "realme-gt-7",
+    name: "realme GT 7",
+    model: "RMX5061",
+    description: "A performance-focused 5G flagship with a high-capacity battery, fast charging, and a powerful MediaTek platform for demanding mobile use.",
+    displaySizeInches: 6.78,
+    batteryMah: 7000,
+    chipset: "Dimensity 9400e",
+    cameraSummary: "50MP main camera system",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 37999,
+    sourceUrl: "https://www.realme.com/ph/realme-gt-7-5g",
+  },
+  {
+    slug: "realme-gt-7t",
+    name: "realme GT 7T",
+    model: "RMX5080",
+    description: "A gaming-oriented 5G phone designed around sustained performance, rapid charging, and a large battery for extended sessions.",
+    displaySizeInches: 6.8,
+    batteryMah: 7000,
+    chipset: "Dimensity 8400-Max",
+    cameraSummary: "50MP main camera",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 29999,
+    sourceUrl: "https://www.realme.com/ph/",
+  },
+  {
+    slug: "realme-gt-6",
+    name: "realme GT 6",
+    model: "RMX3851",
+    description: "A premium 5G performance phone combining a high-refresh display, fast charging, and flagship-grade processing for gaming and multitasking.",
+    displaySizeInches: 6.78,
+    batteryMah: 5500,
+    chipset: "Snapdragon 8s Gen 3",
+    cameraSummary: "50MP main camera system",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 34999,
+    sourceUrl: "https://www.realme.com/ph/",
+  },
+  {
+    slug: "realme-13-pro-5g",
+    name: "realme 13 Pro 5G",
+    model: "RMX3990",
+    description: "A camera-centered 5G phone with an OLED 120Hz display, optical image stabilization, and a 5,200mAh battery for all-day use.",
+    displaySizeInches: 6.7,
+    batteryMah: 5200,
+    chipset: "Snapdragon 7s Gen 2",
+    cameraSummary: "50MP Sony OIS main + 8MP ultrawide; 32MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 24999,
+    sourceUrl: "https://www.realme.com/ph/more-products/realme-13-pro-5g/specs",
+  },
+  {
+    slug: "realme-13-pro-plus-5g",
+    name: "realme 13 Pro+ 5G",
+    model: "RMX3921",
+    description: "A higher-tier 5G imaging phone in the 13 series, built for portrait photography, smooth OLED viewing, and fast charging.",
+    displaySizeInches: 6.7,
+    batteryMah: 5200,
+    chipset: "Snapdragon 7s Gen 2",
+    cameraSummary: "50MP OIS camera system",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 512,
+    amount: 28999,
+    sourceUrl: "https://www.realme.com/ph/",
+  },
+  {
+    slug: "realme-13-plus-5g",
+    name: "realme 13+ 5G",
+    model: "RMX3868",
+    description: "A mid-range 5G phone focused on smooth high-refresh performance, fast charging, and generous storage for everyday entertainment.",
+    displaySizeInches: 6.7,
+    batteryMah: 5000,
+    chipset: "Dimensity 7300 Energy",
+    cameraSummary: "50MP OIS main camera",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 17999,
+    sourceUrl: "https://www.realme.com/ph/",
+  },
+  {
+    slug: "realme-13-5g",
+    name: "realme 13 5G",
+    model: "RMX3951",
+    description: "An affordable 5G phone with a 120Hz FHD+ display, 5,000mAh battery, and optical-stabilized main camera.",
+    displaySizeInches: 6.72,
+    batteryMah: 5000,
+    chipset: "Dimensity 6300 5G",
+    cameraSummary: "50MP OIS main camera; 16MP selfie",
+    has5g: true,
+    ramGb: 12,
+    storageGb: 256,
+    amount: 16999,
+    sourceUrl: "https://www.realme.com/ph/more-products/realme-13-5g/specs",
+  },
+  {
+    slug: "realme-c75",
+    name: "realme C75",
+    model: "RMX3941",
+    description: "A durable 4G phone with IP-rated water protection, a 6,000mAh battery, 45W charging, and a 90Hz FHD+ display.",
+    displaySizeInches: 6.72,
+    batteryMah: 6000,
+    chipset: "Helio G92 Max",
+    cameraSummary: "50MP main camera; 8MP selfie",
+    has5g: false,
+    ramGb: 8,
+    storageGb: 128,
+    amount: 8999,
+    sourceUrl: "https://www.realme.com/ph/realme-c75/specs",
+  },
+  {
+    slug: "realme-note-60",
+    name: "realme Note 60",
+    model: "RMX3933",
+    description: "An entry-level 4G smartphone with a 90Hz display, 5,000mAh battery, expandable storage, and a lightweight everyday design.",
+    displaySizeInches: 6.74,
+    batteryMah: 5000,
+    chipset: "UNISOC T612",
+    cameraSummary: "32MP main camera",
+    has5g: false,
+    ramGb: 6,
+    storageGb: 128,
+    amount: 4399,
+    sourceUrl: "https://www.realme.com/ph/more-products/realme-note60/specs",
+  },
+  {
+    slug: "realme-c75x",
+    name: "realme C75x",
+    model: "RMX5020",
+    description: "A value-focused realme phone with reinforced durability, a smooth display, and a large battery for dependable everyday use.",
+    displaySizeInches: 6.67,
+    batteryMah: 5600,
+    chipset: "Octa-Core mobile platform",
+    cameraSummary: "50MP main camera",
+    has5g: false,
+    ramGb: 8,
+    storageGb: 128,
+    amount: 7999,
+    sourceUrl: "https://www.realme.com/ph/realme-c75x",
+  },
+];
+
 // Add only phone data, images, and prices that you have permission to publish.
 const products: SeedProduct[] = [
   {
@@ -304,6 +513,7 @@ const products: SeedProduct[] = [
     ],
   },
   ...additionalSamsungPhones.map(makeSamsungPhone),
+  ...additionalRealmePhones.map(makeRealmePhone),
 ];
 
 const dataSourceFields = {
