@@ -9,7 +9,6 @@
     "start": "next start",
     "lint": "eslint",
     "contract:emit": "prisma contract emit",
-    "seed:products": "tsx scripts/seed-product.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },

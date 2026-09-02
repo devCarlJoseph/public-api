@@ -681,6 +681,112 @@ const additionalOppoPhones: OppoPhoneSeed[] = [
   },
 ];
 
+const additionalIphonePhones: SeedProduct[] = [
+  {
+    brand: {
+      slug: "apple",
+      name: "Apple",
+      websiteUrl: "https://www.apple.com/ph/",
+    },
+    slug: "iphone-17",
+    name: "iPhone 17",
+    description:
+      "Apple's latest standard iPhone with an A19 chip, a 6.3-inch OLED display, a 48MP dual-camera system, and Apple Intelligence features.",
+    releaseDate: "2025-09-19",
+    spec: {
+      operatingSystem: "iOS 26",
+      chipset: "Apple A19",
+      displaySizeInches: 6.3,
+      displayResolution: "2622 x 1206",
+      cameraSummary: "48MP Fusion main + 48MP Fusion ultrawide; 18MP Center Stage front",
+      has5g: true,
+      hasNfc: true,
+      supportsEsim: true,
+    },
+    variants: [
+      {
+        sku: "IPHONE17-256GB",
+        name: "256GB",
+        storageGb: 256,
+        price: {
+          retailerSlug: "apple-ph",
+          retailerName: "Apple Philippines",
+          retailerWebsiteUrl: "https://www.apple.com/ph/",
+          amount: 57990,
+          currency: "PHP",
+          availability: "listed_price",
+          productUrl: "https://www.apple.com/ph/shop/buy-iphone/iphone-17",
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  },
+];
+
+function makeApplePhone(item: {
+  slug: string;
+  name: string;
+  description: string;
+  operatingSystem: string;
+  chipset: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  cameraSummary: string;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+}): SeedProduct {
+  return {
+    brand: {
+      slug: "apple",
+      name: "Apple",
+      websiteUrl: "https://www.apple.com/ph/",
+    },
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    spec: {
+      operatingSystem: item.operatingSystem,
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      cameraSummary: item.cameraSummary,
+      has5g: true,
+      hasNfc: true,
+      supportsEsim: true,
+    },
+    variants: [
+      {
+        sku: `${item.slug}-${item.storageGb}GB`,
+        name: `${item.storageGb}GB`,
+        storageGb: item.storageGb,
+        price: {
+          retailerSlug: "apple-ph",
+          retailerName: "Apple Philippines",
+          retailerWebsiteUrl: "https://www.apple.com/ph/",
+          amount: item.amount,
+          currency: "PHP",
+          availability: "historical_launch_price",
+          productUrl: item.sourceUrl,
+          checkedAt: "2026-09-03T00:00:00.000Z",
+        },
+      },
+    ],
+  };
+}
+
+const additionalApplePhones: SeedProduct[] = [
+  makeApplePhone({ slug: "iphone-17-pro", name: "iPhone 17 Pro", description: "A pro iPhone with the A19 Pro chip, a pro camera system, and a bright OLED display for demanding creative work.", operatingSystem: "iOS 26", chipset: "Apple A19 Pro", displaySizeInches: 6.3, displayResolution: "2622 x 1206", cameraSummary: "48MP Fusion main + 48MP ultrawide + telephoto; 18MP Center Stage front", storageGb: 256, amount: 79990, sourceUrl: "https://www.apple.com/ph/iphone-17-pro/" }),
+  makeApplePhone({ slug: "iphone-17-pro-max", name: "iPhone 17 Pro Max", description: "Apple's largest pro iPhone with A19 Pro performance, an advanced multi-camera system, and all-day battery life.", operatingSystem: "iOS 26", chipset: "Apple A19 Pro", displaySizeInches: 6.9, displayResolution: "2868 x 1320", cameraSummary: "48MP Fusion main + 48MP ultrawide + telephoto; 18MP Center Stage front", storageGb: 256, amount: 86990, sourceUrl: "https://www.apple.com/ph/iphone-17-pro/" }),
+  makeApplePhone({ slug: "iphone-air", name: "iPhone Air", description: "An ultra-thin iPhone combining a large OLED display, A19 Pro performance, and a high-resolution Fusion camera.", operatingSystem: "iOS 26", chipset: "Apple A19 Pro", displaySizeInches: 6.5, displayResolution: "2736 x 1260", cameraSummary: "48MP Fusion main camera; 18MP Center Stage front", storageGb: 256, amount: 72990, sourceUrl: "https://www.apple.com/ph/iphone-air/" }),
+  makeApplePhone({ slug: "iphone-17e", name: "iPhone 17e", description: "A compact iPhone with the A19 chip, Apple Intelligence, a 48MP camera, and generous starting storage.", operatingSystem: "iOS 26", chipset: "Apple A19", displaySizeInches: 6.1, displayResolution: "2532 x 1170", cameraSummary: "48MP Fusion main camera; 12MP TrueDepth front", storageGb: 256, amount: 44990, sourceUrl: "https://www.apple.com/ph/iphone-17e/" }),
+  makeApplePhone({ slug: "iphone-16", name: "iPhone 16", description: "A capable everyday iPhone with the A18 chip, Camera Control, Apple Intelligence, and a dual Fusion camera system.", operatingSystem: "iOS 18", chipset: "Apple A18", displaySizeInches: 6.1, displayResolution: "2556 x 1179", cameraSummary: "48MP Fusion main + 12MP ultrawide; 12MP TrueDepth front", storageGb: 128, amount: 49990, sourceUrl: "https://www.apple.com/ph/iphone-16/" }),
+  makeApplePhone({ slug: "iphone-16-plus", name: "iPhone 16 Plus", description: "A large-screen iPhone with A18 performance, long battery life, and a versatile dual-camera system.", operatingSystem: "iOS 18", chipset: "Apple A18", displaySizeInches: 6.7, displayResolution: "2796 x 1290", cameraSummary: "48MP Fusion main + 12MP ultrawide; 12MP TrueDepth front", storageGb: 128, amount: 56990, sourceUrl: "https://www.apple.com/ph/iphone-16/" }),
+  makeApplePhone({ slug: "iphone-16e", name: "iPhone 16e", description: "An affordable iPhone powered by the A18 chip with Apple Intelligence, a 48MP camera, and satellite connectivity.", operatingSystem: "iOS 18", chipset: "Apple A18", displaySizeInches: 6.1, displayResolution: "2532 x 1170", cameraSummary: "48MP Fusion main camera; 12MP TrueDepth front", storageGb: 128, amount: 44990, sourceUrl: "https://www.apple.com/ph/iphone-16e/" }),
+  makeApplePhone({ slug: "iphone-15", name: "iPhone 15", description: "A colorful iPhone with the A16 Bionic chip, Dynamic Island, USB-C, and a 48MP main camera.", operatingSystem: "iOS 17", chipset: "Apple A16 Bionic", displaySizeInches: 6.1, displayResolution: "2556 x 1179", cameraSummary: "48MP main + 12MP ultrawide; 12MP TrueDepth front", storageGb: 128, amount: 56990, sourceUrl: "https://www.apple.com/ph/iphone-15/" }),
+  makeApplePhone({ slug: "iphone-15-plus", name: "iPhone 15 Plus", description: "A large-screen iPhone with A16 Bionic performance, a 48MP camera, and extended battery life.", operatingSystem: "iOS 17", chipset: "Apple A16 Bionic", displaySizeInches: 6.7, displayResolution: "2796 x 1290", cameraSummary: "48MP main + 12MP ultrawide; 12MP TrueDepth front", storageGb: 128, amount: 62990, sourceUrl: "https://www.apple.com/ph/iphone-15/" }),
+];
+
 // Add only phone data, images, and prices that you have permission to publish.
 const products: SeedProduct[] = [
   {
@@ -730,6 +836,8 @@ const products: SeedProduct[] = [
   ...additionalSamsungPhones.map(makeSamsungPhone),
   ...additionalRealmePhones.map(makeRealmePhone),
   ...additionalOppoPhones.map(makeOppoPhone),
+  ...additionalIphonePhones,
+  ...additionalApplePhones,
 ];
 
 const dataSourceFields = {
@@ -741,121 +849,147 @@ const dataSourceFields = {
     "Replace with the source attribution required for your product data.",
 };
 
+async function getOrCreateDataSource() {
+  return (
+    (await db.orm.public.DataSource.where({ name: dataSourceFields.name }).first()) ??
+    (await db.orm.public.DataSource.create(dataSourceFields))
+  );
+}
+
+async function getOrCreateBrand(item: SeedProduct) {
+  return (
+    (await db.orm.public.Brand.where({ slug: item.brand.slug }).first()) ??
+    (await db.orm.public.Brand.create({
+      slug: item.brand.slug,
+      name: item.brand.name,
+      websiteUrl: item.brand.websiteUrl ?? null,
+    }))
+  );
+}
+
+async function upsertProduct(
+  item: SeedProduct,
+  brand: { id: number },
+  dataSource: { id: number },
+) {
+  const productFields = {
+    slug: item.slug,
+    type: "PHONE",
+    name: item.name,
+    model: item.model ?? null,
+    description: item.description ?? null,
+    imageUrl: item.imageUrl ?? null,
+    releaseDate: item.releaseDate ?? null,
+    brandId: brand.id,
+    dataSourceId: dataSource.id,
+    isPublished: true,
+  };
+
+  const product = await db.orm.public.Product.where({ slug: item.slug }).first();
+
+  if (product) {
+    await db.orm.public.Product.where({ id: product.id }).update(productFields);
+    return product;
+  }
+
+  return db.orm.public.Product.create(productFields);
+}
+
+async function upsertPhoneSpec(productId: number, spec: SeedProduct["spec"]) {
+  const existingSpec = await db.orm.public.PhoneSpec.where({ productId }).first();
+
+  if (existingSpec) {
+    await db.orm.public.PhoneSpec.where({ id: existingSpec.id }).update(spec);
+    return;
+  }
+
+  await db.orm.public.PhoneSpec.create({ productId, ...spec });
+}
+
+async function getOrCreateRetailer(price: SeedProduct["variants"][number]["price"]) {
+  return (
+    (await db.orm.public.Retailer.where({ slug: price.retailerSlug }).first()) ??
+    (await db.orm.public.Retailer.create({
+      slug: price.retailerSlug,
+      name: price.retailerName,
+      websiteUrl: price.retailerWebsiteUrl ?? null,
+    }))
+  );
+}
+
+async function upsertVariant(productId: number, variantData: SeedProduct["variants"][number]) {
+  const variantFields = {
+    name: variantData.name,
+    color: variantData.color ?? null,
+    ramGb: variantData.ramGb ?? null,
+    storageGb: variantData.storageGb ?? null,
+    sku: variantData.sku,
+  };
+
+  const variant = await db.orm.public.ProductVariant.where({
+    productId,
+    sku: variantData.sku,
+  }).first();
+
+  if (variant) {
+    await db.orm.public.ProductVariant.where({ id: variant.id }).update(variantFields);
+    return variant;
+  }
+
+  return db.orm.public.ProductVariant.create({ productId, ...variantFields });
+}
+
+async function upsertPrice(
+  variantId: number,
+  priceData: SeedProduct["variants"][number]["price"],
+) {
+  const retailer = await getOrCreateRetailer(priceData);
+  const existingPrice = await db.orm.public.ProductPrice.where({
+    variantId,
+    retailerId: retailer.id,
+    checkedAt: priceData.checkedAt,
+  }).first();
+
+  if (existingPrice) return;
+
+  await db.orm.public.ProductPrice.create({
+    variantId,
+    retailerId: retailer.id,
+    amount: priceData.amount,
+    currency: priceData.currency,
+    availability: priceData.availability ?? null,
+    productUrl: priceData.productUrl ?? null,
+    checkedAt: priceData.checkedAt,
+  });
+}
+
+async function seedProduct(
+  item: SeedProduct,
+  dataSource: { id: number },
+) {
+  const brand = await getOrCreateBrand(item);
+  const product = await upsertProduct(item, brand, dataSource);
+
+  await upsertPhoneSpec(product.id, item.spec);
+
+  for (const variantData of item.variants) {
+    const variant = await upsertVariant(product.id, variantData);
+    await upsertPrice(variant.id, variantData.price);
+  }
+
+  console.log(`Seeded: ${product.name}`);
+}
+
 async function main() {
   if (products.length === 0) {
     console.log("No products to seed. Add verified products to the products array.");
     return;
   }
 
-  const dataSource =
-    (await db.orm.public.DataSource.where({
-      name: dataSourceFields.name,
-    }).first()) ??
-    (await db.orm.public.DataSource.create(dataSourceFields));
+  const dataSource = await getOrCreateDataSource();
 
-  for (const item of products) {
-    const brand =
-      (await db.orm.public.Brand.where({
-        slug: item.brand.slug,
-      }).first()) ??
-      (await db.orm.public.Brand.create({
-        slug: item.brand.slug,
-        name: item.brand.name,
-        websiteUrl: item.brand.websiteUrl ?? null,
-      }));
-
-    let product = await db.orm.public.Product.where({
-      slug: item.slug,
-    }).first();
-
-    const productFields = {
-      slug: item.slug,
-      type: "PHONE",
-      name: item.name,
-      model: item.model ?? null,
-      description: item.description ?? null,
-      imageUrl: item.imageUrl ?? null,
-      releaseDate: item.releaseDate ?? null,
-      brandId: brand.id,
-      dataSourceId: dataSource.id,
-      isPublished: true,
-    };
-
-    if (product) {
-      await db.orm.public.Product.where({ id: product.id }).update(productFields);
-    } else {
-      product = await db.orm.public.Product.create(productFields);
-    }
-
-    const existingSpec = await db.orm.public.PhoneSpec.where({
-      productId: product.id,
-    }).first();
-
-    if (existingSpec) {
-      await db.orm.public.PhoneSpec.where({ id: existingSpec.id }).update(item.spec);
-    } else {
-      await db.orm.public.PhoneSpec.create({
-        productId: product.id,
-        ...item.spec,
-      });
-    }
-
-    for (const variantData of item.variants) {
-      let variant = await db.orm.public.ProductVariant.where({
-        productId: product.id,
-        sku: variantData.sku,
-      }).first();
-
-      const variantFields = {
-        name: variantData.name,
-        color: variantData.color ?? null,
-        ramGb: variantData.ramGb ?? null,
-        storageGb: variantData.storageGb ?? null,
-        sku: variantData.sku,
-      };
-
-      if (variant) {
-        await db.orm.public.ProductVariant.where({ id: variant.id }).update(
-          variantFields,
-        );
-      } else {
-        variant = await db.orm.public.ProductVariant.create({
-          productId: product.id,
-          ...variantFields,
-        });
-      }
-
-      const priceData = variantData.price;
-      const retailer =
-        (await db.orm.public.Retailer.where({
-          slug: priceData.retailerSlug,
-        }).first()) ??
-        (await db.orm.public.Retailer.create({
-          slug: priceData.retailerSlug,
-          name: priceData.retailerName,
-          websiteUrl: priceData.retailerWebsiteUrl ?? null,
-        }));
-
-      const existingPrice = await db.orm.public.ProductPrice.where({
-        variantId: variant.id,
-        retailerId: retailer.id,
-        checkedAt: priceData.checkedAt,
-      }).first();
-
-      if (!existingPrice) {
-        await db.orm.public.ProductPrice.create({
-          variantId: variant.id,
-          retailerId: retailer.id,
-          amount: priceData.amount,
-          currency: priceData.currency,
-          availability: priceData.availability ?? null,
-          productUrl: priceData.productUrl ?? null,
-          checkedAt: priceData.checkedAt,
-        });
-      }
-    }
-
-    console.log(`Seeded: ${product.name}`);
+  for (const product of products) {
+    await seedProduct(product, dataSource);
   }
 
   console.log(`Finished. ${products.length} products are available.`);
