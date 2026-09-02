@@ -787,6 +787,130 @@ const additionalApplePhones: SeedProduct[] = [
   makeApplePhone({ slug: "iphone-15-plus", name: "iPhone 15 Plus", description: "A large-screen iPhone with A16 Bionic performance, a 48MP camera, and extended battery life.", operatingSystem: "iOS 17", chipset: "Apple A16 Bionic", displaySizeInches: 6.7, displayResolution: "2796 x 1290", cameraSummary: "48MP main + 12MP ultrawide; 12MP TrueDepth front", storageGb: 128, amount: 62990, sourceUrl: "https://www.apple.com/ph/iphone-15/" }),
 ];
 
+function makePocoPhone(item: {
+  slug: string;
+  name: string;
+  description: string;
+  chipset: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  batteryMah: number;
+  cameraSummary: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+}): SeedProduct {
+  return {
+    brand: { slug: "poco", name: "POCO", websiteUrl: "https://www.mi.com/ph/" },
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+      hasNfc: true,
+    },
+    variants: [{
+      sku: `${item.slug}-${item.ramGb}GB-${item.storageGb}GB`,
+      name: `${item.ramGb}GB / ${item.storageGb}GB`,
+      ramGb: item.ramGb,
+      storageGb: item.storageGb,
+      price: {
+        retailerSlug: "poco-ph",
+        retailerName: "POCO Philippines",
+        retailerWebsiteUrl: "https://www.mi.com/ph/",
+        amount: item.amount,
+        currency: "PHP",
+        availability: "historical_launch_price",
+        productUrl: item.sourceUrl,
+        checkedAt: "2026-09-03T00:00:00.000Z",
+      },
+    }],
+  };
+}
+
+const additionalPocoPhones: SeedProduct[] = [
+  makePocoPhone({ slug: "poco-f7-ultra", name: "POCO F7 Ultra", description: "A performance flagship with a high-refresh AMOLED display, flagship Snapdragon silicon, and fast charging.", chipset: "Snapdragon 8 Elite", displaySizeInches: 6.67, displayResolution: "3200 x 1440", batteryMah: 5300, cameraSummary: "50MP main + 50MP telephoto + 32MP ultrawide; 32MP selfie", has5g: true, ramGb: 12, storageGb: 256, amount: 39999, sourceUrl: "https://www.mi.com/ph/product/poco-f7-ultra/" }),
+  makePocoPhone({ slug: "poco-f7-pro", name: "POCO F7 Pro", description: "A gaming-focused 5G phone with a 120Hz AMOLED display, Snapdragon flagship performance, and a large battery.", chipset: "Snapdragon 8 Gen 3", displaySizeInches: 6.67, displayResolution: "3200 x 1440", batteryMah: 6000, cameraSummary: "50MP main + 8MP ultrawide; 20MP selfie", has5g: true, ramGb: 12, storageGb: 256, amount: 28999, sourceUrl: "https://www.mi.com/ph/product/poco-f7-pro/" }),
+  makePocoPhone({ slug: "poco-f7", name: "POCO F7", description: "A high-performance 5G phone with a 120Hz AMOLED display, Snapdragon 8s Gen 4 power, and a 6500mAh battery.", chipset: "Snapdragon 8s Gen 4", displaySizeInches: 6.83, displayResolution: "2772 x 1280", batteryMah: 6500, cameraSummary: "50MP main + 8MP ultrawide; 20MP selfie", has5g: true, ramGb: 12, storageGb: 512, amount: 28999, sourceUrl: "https://www.mi.com/ph/product/poco-f7/" }),
+  makePocoPhone({ slug: "poco-x7-pro", name: "POCO X7 Pro", description: "A performance-oriented 5G phone with a 120Hz AMOLED display, Dimensity 8400 Ultra, and a 6000mAh battery.", chipset: "MediaTek Dimensity 8400 Ultra", displaySizeInches: 6.67, displayResolution: "2712 x 1220", batteryMah: 6000, cameraSummary: "50MP OIS main + 8MP ultrawide; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 19999, sourceUrl: "https://www.mi.com/ph/product/poco-x7-pro/" }),
+  makePocoPhone({ slug: "poco-x7", name: "POCO X7", description: "A value 5G phone with a curved 120Hz AMOLED display, capable cameras, and long-lasting battery life.", chipset: "MediaTek Dimensity 7300 Ultra", displaySizeInches: 6.67, displayResolution: "2712 x 1220", batteryMah: 5110, cameraSummary: "50MP OIS main + 8MP ultrawide + 2MP macro; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 16999, sourceUrl: "https://www.mi.com/ph/product/poco-x7/" }),
+  makePocoPhone({ slug: "poco-m7-pro-5g", name: "POCO M7 Pro 5G", description: "A balanced 5G phone with a 120Hz AMOLED display, a large battery, and a high-resolution main camera.", chipset: "MediaTek Dimensity 700", displaySizeInches: 6.67, displayResolution: "2400 x 1080", batteryMah: 5110, cameraSummary: "50MP OIS main + 2MP depth; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 14999, sourceUrl: "https://www.mi.com/ph/product/poco-m7-pro-5g/" }),
+  makePocoPhone({ slug: "poco-m7", name: "POCO M7", description: "An affordable large-screen 5G phone with a 7000mAh battery, smooth refresh rate, and expandable storage.", chipset: "Snapdragon 4 Gen 2", displaySizeInches: 6.9, displayResolution: "2340 x 1080", batteryMah: 7000, cameraSummary: "50MP main camera; 8MP selfie", has5g: true, ramGb: 6, storageGb: 128, amount: 9999, sourceUrl: "https://www.mi.com/ph/product/poco-m7/" }),
+  makePocoPhone({ slug: "poco-c75", name: "POCO C75", description: "A budget 4G phone with a 120Hz display, a large battery, and a practical everyday camera.", chipset: "MediaTek Helio G81 Ultra", displaySizeInches: 6.88, displayResolution: "1640 x 720", batteryMah: 5160, cameraSummary: "50MP main camera; 13MP selfie", has5g: false, ramGb: 8, storageGb: 256, amount: 7499, sourceUrl: "https://www.mi.com/ph/product/poco-c75/" }),
+  makePocoPhone({ slug: "poco-f6-pro", name: "POCO F6 Pro", description: "A flagship-killer 5G phone with a 120Hz WQHD+ AMOLED display, Snapdragon performance, and 120W charging.", chipset: "Snapdragon 8 Gen 2", displaySizeInches: 6.67, displayResolution: "3200 x 1440", batteryMah: 5000, cameraSummary: "50MP OIS main + 8MP ultrawide + 2MP macro; 16MP selfie", has5g: true, ramGb: 12, storageGb: 256, amount: 26999, sourceUrl: "https://www.mi.com/ph/product/poco-f6-pro/" }),
+  makePocoPhone({ slug: "poco-f6", name: "POCO F6", description: "A lightweight 5G performance phone with a 120Hz AMOLED display, Snapdragon 8s Gen 3, and fast charging.", chipset: "Snapdragon 8s Gen 3", displaySizeInches: 6.67, displayResolution: "2712 x 1220", batteryMah: 5000, cameraSummary: "50MP OIS main + 8MP ultrawide; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 21999, sourceUrl: "https://www.mi.com/ph/product/poco-f6/" }),
+];
+
+function makeRedmiPhone(item: {
+  slug: string;
+  name: string;
+  description: string;
+  chipset: string;
+  displaySizeInches: number;
+  displayResolution: string;
+  batteryMah: number;
+  cameraSummary: string;
+  has5g: boolean;
+  ramGb: number;
+  storageGb: number;
+  amount: number;
+  sourceUrl: string;
+}): SeedProduct {
+  return {
+    brand: { slug: "redmi", name: "Redmi", websiteUrl: "https://www.mi.com/ph/" },
+    slug: item.slug,
+    name: item.name,
+    description: item.description,
+    spec: {
+      operatingSystem: "Android",
+      chipset: item.chipset,
+      displaySizeInches: item.displaySizeInches,
+      displayResolution: item.displayResolution,
+      batteryMah: item.batteryMah,
+      cameraSummary: item.cameraSummary,
+      has5g: item.has5g,
+      hasNfc: true,
+    },
+    variants: [{
+      sku: `${item.slug}-${item.ramGb}GB-${item.storageGb}GB`,
+      name: `${item.ramGb}GB / ${item.storageGb}GB`,
+      ramGb: item.ramGb,
+      storageGb: item.storageGb,
+      price: {
+        retailerSlug: "xiaomi-ph",
+        retailerName: "Xiaomi Philippines",
+        retailerWebsiteUrl: "https://www.mi.com/ph/",
+        amount: item.amount,
+        currency: "PHP",
+        availability: "historical_launch_price",
+        productUrl: item.sourceUrl,
+        checkedAt: "2026-09-03T00:00:00.000Z",
+      },
+    }],
+  };
+}
+
+const additionalRedmiPhones: SeedProduct[] = [
+  makeRedmiPhone({ slug: "redmi-note-14-pro-plus-5g", name: "Redmi Note 14 Pro+ 5G", description: "A premium Redmi 5G phone with a curved 1.5K display, 200MP camera, and 120W charging.", chipset: "Snapdragon 7s Gen 3", displaySizeInches: 6.67, displayResolution: "2712 x 1220", batteryMah: 5110, cameraSummary: "200MP OIS main + 8MP ultrawide + 2MP macro; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 25999, sourceUrl: "https://www.mi.com/ph/product/redmi-note-14-pro-plus-5g/" }),
+  makeRedmiPhone({ slug: "redmi-note-14-pro-5g", name: "Redmi Note 14 Pro 5G", description: "A camera-focused 5G phone with a 200MP OIS camera, IP68 resistance, and a 120Hz AMOLED display.", chipset: "MediaTek Dimensity 7300-Ultra", displaySizeInches: 6.67, displayResolution: "2712 x 1220", batteryMah: 5110, cameraSummary: "200MP OIS main + 8MP ultrawide; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 19999, sourceUrl: "https://www.mi.com/ph/product/redmi-note-14-pro-5g/" }),
+  makeRedmiPhone({ slug: "redmi-note-14-5g", name: "Redmi Note 14 5G", description: "A balanced 5G phone with a 120Hz AMOLED display, 108MP camera, and long-lasting battery.", chipset: "MediaTek Dimensity 7025-Ultra", displaySizeInches: 6.67, displayResolution: "2400 x 1080", batteryMah: 5110, cameraSummary: "108MP main + 2MP depth + 2MP macro; 20MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 14999, sourceUrl: "https://www.mi.com/ph/product/redmi-note-14-5g/" }),
+  makeRedmiPhone({ slug: "redmi-note-14", name: "Redmi Note 14", description: "A value Redmi phone with a 120Hz AMOLED display, 108MP camera, and 5,500mAh battery.", chipset: "MediaTek Helio G99-Ultra", displaySizeInches: 6.67, displayResolution: "2400 x 1080", batteryMah: 5500, cameraSummary: "108MP main + 2MP depth + 2MP macro; 20MP selfie", has5g: false, ramGb: 8, storageGb: 256, amount: 11999, sourceUrl: "https://www.mi.com/ph/product/redmi-note-14/" }),
+  makeRedmiPhone({ slug: "redmi-15-5g", name: "Redmi 15 5G", description: "A large-screen 5G Redmi phone built around a huge battery and a smooth adaptive display.", chipset: "Snapdragon 6s Gen 3", displaySizeInches: 6.9, displayResolution: "2340 x 1080", batteryMah: 7000, cameraSummary: "50MP main camera; 8MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 10999, sourceUrl: "https://www.mi.com/ph/product/redmi-15-5g/" }),
+  makeRedmiPhone({ slug: "redmi-15", name: "Redmi 15", description: "A long-lasting 4G smartphone with a 7000mAh battery, large display, and durable everyday design.", chipset: "Snapdragon 685", displaySizeInches: 6.9, displayResolution: "2340 x 1080", batteryMah: 7000, cameraSummary: "50MP main camera; 8MP selfie", has5g: false, ramGb: 8, storageGb: 256, amount: 8999, sourceUrl: "https://www.mi.com/ph/product/redmi-15/" }),
+  makeRedmiPhone({ slug: "redmi-a5", name: "Redmi A5", description: "An entry-level Redmi phone with a 120Hz display, 32MP camera, and 5,200mAh battery.", chipset: "UNISOC T7250", displaySizeInches: 6.88, displayResolution: "1640 x 720", batteryMah: 5200, cameraSummary: "32MP AI main camera; 5MP selfie", has5g: false, ramGb: 4, storageGb: 128, amount: 4999, sourceUrl: "https://www.mi.com/ph/product/redmi-a5/" }),
+  makeRedmiPhone({ slug: "redmi-14c", name: "Redmi 14C", description: "A budget Redmi phone with a large 120Hz display, 5160mAh battery, and 50MP camera.", chipset: "MediaTek Helio G81 Ultra", displaySizeInches: 6.88, displayResolution: "1640 x 720", batteryMah: 5160, cameraSummary: "50MP main camera; 13MP selfie", has5g: false, ramGb: 8, storageGb: 256, amount: 6999, sourceUrl: "https://www.mi.com/ph/product/redmi-14c/" }),
+  makeRedmiPhone({ slug: "redmi-13", name: "Redmi 13", description: "A dependable 4G phone with a 108MP camera, 90Hz display, and 5030mAh battery.", chipset: "MediaTek Helio G91 Ultra", displaySizeInches: 6.79, displayResolution: "2460 x 1080", batteryMah: 5030, cameraSummary: "108MP main + 2MP macro; 13MP selfie", has5g: false, ramGb: 8, storageGb: 128, amount: 7999, sourceUrl: "https://www.mi.com/ph/product/redmi-13/" }),
+  makeRedmiPhone({ slug: "redmi-note-13-pro-plus-5g", name: "Redmi Note 13 Pro+ 5G", description: "A premium Redmi 5G phone with a 200MP OIS camera, curved AMOLED display, and fast charging.", chipset: "MediaTek Dimensity 7200-Ultra", displaySizeInches: 6.67, displayResolution: "2712 x 1220", batteryMah: 5000, cameraSummary: "200MP OIS main + 8MP ultrawide + 2MP macro; 16MP selfie", has5g: true, ramGb: 8, storageGb: 256, amount: 21999, sourceUrl: "https://www.mi.com/ph/product/redmi-note-13-pro-plus-5g/" }),
+];
+
 // Add only phone data, images, and prices that you have permission to publish.
 const products: SeedProduct[] = [
   {
@@ -838,6 +962,8 @@ const products: SeedProduct[] = [
   ...additionalOppoPhones.map(makeOppoPhone),
   ...additionalIphonePhones,
   ...additionalApplePhones,
+  ...additionalPocoPhones,
+  ...additionalRedmiPhones,
 ];
 
 const dataSourceFields = {
