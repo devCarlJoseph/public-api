@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint",
     "contract:emit": "prisma contract emit",
+    "seed:products": "tsx scripts/seed-product.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -33,6 +34,7 @@
     "eslint-config-next": "16.3.3",
     "prisma": "^8.0.0-rc.10",
     "tailwindcss": "^4",
+    "tsx": "^4.23.13",
     "typescript": "^5",
     "vitest": "^4.1.11"
   }
