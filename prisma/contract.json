@@ -389,6 +389,21 @@
                   "namespace": "public"
                 }
               },
+              "products": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "dataSourceId"
+                  ]
+                },
+                "to": {
+                  "model": "Product",
+                  "namespace": "public"
+                }
+              },
               "recipes": {
                 "cardinality": "1:N",
                 "on": {
@@ -827,6 +842,13 @@
                   "kind": "scalar"
                 }
               },
+              "dataSourceId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "description": {
                 "nullable": true,
                 "type": {
@@ -929,6 +951,21 @@
                   "namespace": "public"
                 }
               },
+              "dataSource": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "dataSourceId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "DataSource",
+                  "namespace": "public"
+                }
+              },
               "phoneSpec": {
                 "cardinality": "1:1",
                 "on": {
@@ -967,6 +1004,9 @@
                 },
                 "createdAt": {
                   "column": "createdAt"
+                },
+                "dataSourceId": {
+                  "column": "dataSourceId"
                 },
                 "description": {
                   "column": "description"
@@ -2542,6 +2582,11 @@
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
+                "dataSourceId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "description": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2617,6 +2662,22 @@
                     "namespaceId": "public",
                     "tableName": "brand"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "dataSourceId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "product"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "dataSource"
+                  }
                 }
               ],
               "indexes": [
@@ -2626,6 +2687,14 @@
                   ],
                   "name": "product_brandId_idx_02e95397",
                   "prefix": "product_brandId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "dataSourceId"
+                  ],
+                  "name": "product_dataSourceId_idx_536a4d74",
+                  "prefix": "product_dataSourceId_idx",
                   "unique": false
                 },
                 {
@@ -3571,7 +3640,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "994ab9f451fa142efcf621edb5eeba2f03aed6588dba4005e1fd279610eddc50"
+    "storageHash": "7e386929fcd9c7e34594ea2879087b965a2bf0456fb374749d0e9b104647394b"
   },
   "execution": {
     "executionHash": "7636d9c50da512653844d11ca4e14dc300f312b2a2c13d89ae0968f0ca50f3d3",

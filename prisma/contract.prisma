@@ -10,6 +10,7 @@ model DataSource {
   updatedAt       temporal.updatedAtString()
 
   recipes    Recipe[]
+  products Product[]
   importRuns ImportRun[]
 }
 
@@ -182,8 +183,10 @@ model Product {
   isPublished Boolean           @default(true)
   createdAt   TimestamptzString @default(now())
   updatedAt   temporal.updatedAtString()
+  dataSourceId Int?
 
   brand      Brand?             @relation(fields: [brandId], references: [id])
+  dataSource DataSource?        @relation(fields: [dataSourceId], references: [id])
   phoneSpec  PhoneSpec?
   variants   ProductVariant[]
   categories ProductCategory[]
@@ -191,6 +194,7 @@ model Product {
   @@index([type])
   @@index([brandId])
   @@index([isPublished])
+  @@index([dataSourceId])
 }
 
 model PhoneSpec {
