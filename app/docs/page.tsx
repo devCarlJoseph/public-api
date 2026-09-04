@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "API Documentation | My Public API",
-  description: "Public Filipino recipes API documentation",
+  description: "Public Filipino recipes and phones API documentation",
 };
 
 function CodeBlock({ children }: { children: string }) {
@@ -129,6 +129,66 @@ export default function DocsPage() {
           Returns the available recipe categories.
         </p>
       </section>
+
+      <section className="mb-10">
+    <h2 className="mb-3 text-2xl font-semibold">
+      List phones
+    </h2>
+
+    <CodeBlock>
+      {"GET /phones"}
+    </CodeBlock>
+
+    <p className="mt-3 text-gray-600">
+      Returns published phones with pagination and search support.
+    </p>
+
+    <h3 className="mt-6 mb-2 text-lg font-semibold">
+      Query parameters
+    </h3>
+
+    <ul className="list-disc space-y-1 pl-6 text-gray-600">
+      <li>
+        <code>page</code> — Page number. Defaults to <code>1</code>.
+      </li>
+      <li>
+        <code>limit</code> — Number of results. Maximum is <code>100</code>.
+      </li>
+      <li>
+        <code>search</code> — Search by phone name.
+      </li>
+    </ul>
+
+    <h3 className="mt-6 mb-2 text-lg font-semibold">
+      Example request
+    </h3>
+
+    <CodeBlock>
+      {"GET /phones?search=redmi&page=1&limit=20"}
+    </CodeBlock>
+  </section>
+
+  <section className="mb-10">
+    <h2 className="mb-3 text-2xl font-semibold">
+      Get a phone by slug
+    </h2>
+
+    <CodeBlock>
+      {"GET /phones/{slug}"}
+    </CodeBlock>
+
+    <p className="mt-3 text-gray-600">
+      Returns detailed phone information, specifications, and variants.
+    </p>
+
+    <h3 className="mt-6 mb-2 text-lg font-semibold">
+      Example request
+    </h3>
+
+    <CodeBlock>
+      {"GET /phones/iphone-17"}
+    </CodeBlock>
+  </section>
 
       <section className="mb-10">
         <h2 className="mb-3 text-2xl font-semibold">
