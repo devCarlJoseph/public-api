@@ -12,3 +12,16 @@ export async function getOrCreateDataSource() {
     }))
   );
 }
+
+export async function getOrCreateRecipeDataSource() {
+  return (
+    (await db.orm.public.DataSource.where({
+      name: "Original Recipe Seed Data",
+    }).first()) ??
+    (await db.orm.public.DataSource.create({
+      name: "Original Recipe Seed Data",
+      license: "Original content",
+      attributionText: "Created for Catalogra",
+    }))
+  );
+}
